@@ -72,15 +72,17 @@ public class AdministratorController {
 	public String insert(@Validated InsertAdministratorForm form, BindingResult result,
 			RedirectAttributes redirectAttributes, Model model) {
 		if (result.hasErrors()) {
-			// ■indexメソッドがmodelを受け取る形になっている。
-			// > checkboxでmodelが必要になる為。
 			return "administrator/insert";
 		}
-		Administrator administrator = new Administrator();
-		// フォームからドメインにプロパティ値をコピー
-		BeanUtils.copyProperties(form, administrator);
-		administratorService.insert(administrator);
-        return "redirect:/";
+		if (administratorService.findByMailAddress(form.getMailAddress())== null) {
+			Administrator administrator = new Administrator();
+			BeanUtils.copyProperties(form, administrator);
+			administratorService.insert(administrator);
+			return "redirect:/";			
+		}else {
+			model.addAttribute("errorMessage", "メールアドレスが重複しています");
+			return "administrator/insert";
+		}
 	}
 
 	/////////////////////////////////////////////////////
