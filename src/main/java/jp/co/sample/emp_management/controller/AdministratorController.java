@@ -74,6 +74,14 @@ public class AdministratorController {
 		if (result.hasErrors()) {
 			return "administrator/insert";
 		}
+//■パスワードと確認パスワードが合っているか	
+		String password = form.getPassword();
+		String confirmPassword = form.getConfirmPassword();
+		if (!(password.equals(confirmPassword))) {
+			model.addAttribute("notMuchMessage", "パスワードと確認パスワードが一致していません");
+			return "administrator/insert";
+		}
+//■メールアドレスが重複していなければ登録。
 		if (administratorService.findByMailAddress(form.getMailAddress())== null) {
 			Administrator administrator = new Administrator();
 			BeanUtils.copyProperties(form, administrator);
