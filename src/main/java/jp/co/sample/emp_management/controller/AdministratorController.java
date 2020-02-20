@@ -71,27 +71,53 @@ public class AdministratorController {
 	@RequestMapping("/insert")
 	public String insert(@Validated InsertAdministratorForm form, BindingResult result,
 			RedirectAttributes redirectAttributes, Model model) {
-		if (result.hasErrors()) {
-			return "administrator/insert";
-		}
+
 //■パスワードと確認パスワードが合っているか	
 		String password = form.getPassword();
 		String confirmPassword = form.getConfirmPassword();
 		if (!(password.equals(confirmPassword))) {
-			model.addAttribute("notMuchMessage", "パスワードと確認パスワードが一致していません");
-			return "administrator/insert";
+			result.rejectValue("password", null, "パスワードと確認パスワードが一致していません");
 		}
 //■メールアドレスが重複していなければ登録。
-		if (administratorService.findByMailAddress(form.getMailAddress())== null) {
+		if (administratorService.findByMailAddress(form.getMailAddress()) != null) {
+			result.rejectValue("mailAddress", null, "メールアドレスが重複しています	");
+		}
+
+		if (result.hasErrors()) {
+			return "administrator/insert";
+		} else {
 			Administrator administrator = new Administrator();
 			BeanUtils.copyProperties(form, administrator);
 			administratorService.insert(administrator);
-			return "redirect:/";			
-		}else {
-			model.addAttribute("errorMessage", "メールアドレスが重複しています");
-			return "administrator/insert";
+			return "redirect:/";
 		}
 	}
+
+//	@RequestMapping("/insert")
+//	public String insert2(@Validated InsertAdministratorForm form, BindingResult result,
+//			RedirectAttributes redirectAttributes, Model model) {
+//
+//		if (result.hasErrors()) {
+//			return "administrator/insert";
+//		}
+////■パスワードと確認パスワードが合っているか	
+//		String password = form.getPassword();
+//		String confirmPassword = form.getConfirmPassword();
+//		if (!(password.equals(confirmPassword))) {
+//			result.rejectValue("password", null, "パスワードと確認パスワードが一致していません");
+//			return "administrator/insert";
+//		}
+////■メールアドレスが重複していなければ登録。
+//		if (administratorService.findByMailAddress(form.getMailAddress()) == null) {
+//			Administrator administrator = new Administrator();
+//			BeanUtils.copyProperties(form, administrator);
+//			administratorService.insert(administrator);
+//			return "redirect:/";
+//		} else {
+//			result.rejectValue("mailAddress", null, "メールアドレスが重複しています	");
+//			return "administrator/insert";
+//		}
+//	}
 
 	/////////////////////////////////////////////////////
 	// ユースケース：ログインをする
@@ -120,7 +146,7 @@ public class AdministratorController {
 			model.addAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
 			return toLogin();
 		}
-		session.setAttribute("administratorName",administrator.getName());
+		session.setAttribute("administratorName", administrator.getName());
 //		model.addAttribute("administratorName",administrator.getName());
 		return "forward:/employee/showList";
 	}

@@ -59,10 +59,7 @@
 										<label th:if="${#fields.hasErrors('mailAddress')}" th:errors="*{mailAddress}" class="error-messages">
 											メールアドレスを入力してください
 										</label>
-										<label th:unless="${errorMessage == null}" th:text="${errorMessage}" class="error-messages">
-											メールアドレスが重複しています
-										</label>
-										<input type="text" name="mailAddress" id="mailAddress" class="form-control" placeholder="yamada@mail.com"
+											<input type="text" name="mailAddress" id="mailAddress" class="form-control" placeholder="yamada@mail.com"
 											 th:field="*{mailAddress}" th:errorclass="error-input" value="yamada@mail.com">
 									</div>
 								</div>
@@ -77,10 +74,7 @@
 										<label th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-messages">
 											パスワードを入力してください
 										</label>
-										<label th:unless="${notMuchMessage == null}" th:text="${notMuchMessage}" class="error-messages">
-											パスワードと確認パスワードが一致していません
-										</label>
-										<input type="password" name="password" id="password" class="form-control" placeholder="password"
+											<input type="password" name="password" id="password" class="form-control" placeholder="password"
 											 th:field="*{password}" th:errorclass="error-input" value="xxxxxxxx">
 									</div>
 								</div>
@@ -95,7 +89,6 @@
 										<label th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="error-messages">
 											確認パスワードを入力してください
 										</label>
-										<!-- <input type="password" name="confirmPassword" id="confirm-password" class="form-control" placeholder="password" th:field="*{password}" th:errorclass="error-input" value="xxxxxxxx"> -->
 										<input type="password" name="confirmPassword" id="confirm-password" class="form-control" placeholder="ConfirmPassword" th:field="*{confirmPassword}" th:errorclass="error-input" value="xxxxxxxx">
 									</div>
 								</div>
